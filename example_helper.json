@@ -1,0 +1,35 @@
+{
+  "first_name": "John",
+  "last_name": "Smith",
+  "cities": ["Mountain View", "Sunnyvale"],
+  "available_times": [
+    {
+      "start_hour": 9,
+      "start_minute": 10,
+      "end_hour": 16,
+      "end_minute": 0
+    },
+    {
+      "start_hour": 16,
+      "start_minute": 10,
+      "end_hour": 20,
+      "end_minute": 0
+    }
+  ],
+  "hive_info": {
+    "home_latitude": 30.006,
+    "home_longitude": 120.123,
+    "office_latitude": 30.012,
+    "office_longitude": 119.33,
+    "go_to_work_hour": 8,
+    "go_to_work_minute": 0,
+    "go_home_hour": 15,
+    "go_home_minute": 30
+  },
+  "transportations": ["car", "bike"],
+  "driver_license_number": "Y123456",
+  "social_security_number": "42144123",
+  "address": "100 Street 1, Sunnyvale, CA, 94183",
+  "phone_number": "6501231234",
+  "score": 4.95
+}

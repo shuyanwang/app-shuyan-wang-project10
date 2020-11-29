@@ -1,35 +1,45 @@
-from models.Needer import NeederDocument
+from models.Request import RequestDocument
+from services.NeederService import *
 import datetime
 
 
-def create_needer_in_db(json) -> NeederDocument:
-    needer_doc = NeederDocument(**json)
-    needer_doc.save()
-    return needer_doc
+def create_request_in_db(needer_id, json) -> RequestDocument:
+    the_needer = get_needer_by_id(needer_id)
+    if the_needer:
+        json['needer_id'] = needer_id
+        json['pick_up_time'] = datetime.datetime.fromtimestamp(json['pick_up_time'] / 1e3)
+        json['drop_off_time'] = datetime.datetime.fromtimestamp(json['drop_off_time'] / 1e3)
+        created_doc = RequestDocument(**json)
+        created_doc.save()
+        return created_doc
+    else:
+        raise Exception("needer does not exist in db")
 
 
-def update_needer(needer_id: str, json):
-    the_needer = NeederDocument.objects.filter(id=needer_id).first()
-    the_needer.update(**json)
-    the_needer.reload()
-    return the_needer
+def update_request(request_id: str, json):
+    the_request = RequestDocument.objects.filter(id=request_id).first()
+    the_request.update(**json)
+    the_request.reload()
+    return the_request
 
 
 # soft delete, mark the needer as not activate use
-def delete_needer(needer_id: str):
-    the_needer = NeederDocument.objects.filter(id=needer_id).first()
-    the_needer.update(is_activate=False)
-    the_needer.reload()
-    return the_needer
+def delete_request(request_id: str):
+    the_request = RequestDocument.objects.filter(id=request_id).first().delete()
+    return the_request
 
 
-def get_needer_by_id(needer_id):
-    return NeederDocument.objects.filter(id=needer_id).filter(is_activate=True).first()
+def get_request_by_id(request_id):
+    return RequestDocument.objects.filter(id=request_id).first()
 
 
-# return all active needers
-def get_all_needers(filter_by, filter_value, sort_by, sort_order, page_size, page):
-    objects = NeederDocument.objects.filter(is_activate=True)
+def get_all_requests_for_the_needer(needer_id):
+    return RequestDocument.objects.filter(needer_id=needer_id)
+
+
+# return all requests
+def get_all_requests(filter_by, filter_value, sort_by, sort_order, page_size, page):
+    objects = RequestDocument.objects
 
     if filter_by and filter_value:
         objects = objects.filter(**{filter_by: filter_value})

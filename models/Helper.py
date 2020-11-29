@@ -1,5 +1,5 @@
 from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentField, EmbeddedDocumentListField, StringField, ListField,\
-    IntField, DateTimeField, ObjectIdField, FloatField, BooleanField
+    IntField, DateTimeField, FloatField, BooleanField
 import datetime
 
 

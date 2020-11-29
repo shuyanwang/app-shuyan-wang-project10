@@ -24,7 +24,8 @@ api.add_resource(ResetResource,
                  '/reset')
 
 api.add_resource(BankAccountResource,
-                 '/helpers/bankaccounts')
+                 '/helpers/<string:helper_id>/bankaccounts',
+                 '/helpers/<string:helper_id>/bankaccounts/<string:bank_account_id>')
 
 
 @app.route('/')

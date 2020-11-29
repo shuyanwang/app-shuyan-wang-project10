@@ -3,6 +3,7 @@ from flask_restful import Api
 from database.db import initialize_db
 from resources.HelperResource import HelperResource
 from resources.BankAccountResource import BankAccountResource
+from resources.CarResource import CarResource
 from resources.ResetResource import ResetResource
 from utils.JSONEncoder import MongoEngineJSONEncoder
 
@@ -26,6 +27,11 @@ api.add_resource(ResetResource,
 api.add_resource(BankAccountResource,
                  '/helpers/<string:helper_id>/bankaccounts',
                  '/helpers/<string:helper_id>/bankaccounts/<string:bank_account_id>')
+
+api.add_resource(CarResource,
+                 '/helpers/<string:helper_id>/cars',
+                 '/helpers/<string:helper_id>/cars/<string:car_id>')
+
 
 
 @app.route('/')

@@ -6,6 +6,7 @@ from resources.CarResource import CarResource
 from resources.HelperResource import HelperResource
 from resources.NeederResource import NeederResource
 from resources.PaymentMethodResource import PaymentMethodResource
+from resources.RatingResource import RatingResource
 from resources.RequestResouce import RequestResource
 from resources.ResetResource import ResetResource
 from utils.JSONEncoder import MongoEngineJSONEncoder
@@ -28,11 +29,19 @@ api.add_resource(NeederResource,
                  '/needers',
                  '/needers/<string:needer_id>')
 
+api.add_resource(RatingResource,
+                 '/ratings',
+                 '/ratings/<string:rating_id>',
+                 '/ratings/<string:request_id>',
+                 '/helpers/<string:helper_id>/ratings',
+                 '/needers/<string:needer_id>/ratings')
+
 api.add_resource(RequestResource,
                  '/requests',
                  '/requests/<string:request_id>',
                  '/needers/<string:needer_id>/requests',
-                 '/needers/<string:needer_id>/requests/<string:request_id>')
+                 '/needers/<string:needer_id>/requests/<string:request_id>',
+                 '/helpers/<string:helper_id>/requests/<string:request_id>')
 
 api.add_resource(BankAccountResource,
                  '/helpers/<string:helper_id>/bankaccounts',

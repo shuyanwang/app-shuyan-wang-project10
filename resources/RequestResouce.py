@@ -31,7 +31,7 @@ class RequestResource(Resource):
         if helper_id:
             request.json['helper_id'] = helper_id
         if request_id:
-            return jsonify(update_request(needer_id, request.json))
+            return jsonify(update_request(request_id, request.json))
         else:
             return 'request_id is needed for updating a request'
 

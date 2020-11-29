@@ -18,12 +18,13 @@ def create_request_in_db(needer_id, json) -> RequestDocument:
 
 def update_request(request_id: str, json):
     the_request = RequestDocument.objects.filter(id=request_id).first()
+    json['pick_up_time'] = datetime.datetime.fromtimestamp(json['pick_up_time'] / 1e3)
+    json['drop_off_time'] = datetime.datetime.fromtimestamp(json['drop_off_time'] / 1e3)
     the_request.update(**json)
     the_request.reload()
     return the_request
 
 
-# soft delete, mark the needer as not activate use
 def delete_request(request_id: str):
     the_request = RequestDocument.objects.filter(id=request_id).first().delete()
     return the_request

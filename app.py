@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_restful import Api
 from database.db import initialize_db
-from resources.HelperResource import HelperResource
 from resources.BankAccountResource import BankAccountResource
 from resources.CarResource import CarResource
+from resources.HelperResource import HelperResource
+from resources.NeederResource import NeederResource
+from resources.PaymentMethodResource import PaymentMethodResource
 from resources.ResetResource import ResetResource
 from utils.JSONEncoder import MongoEngineJSONEncoder
 
@@ -21,8 +23,9 @@ api.add_resource(HelperResource,
                  '/helpers',
                  '/helpers/<string:helper_id>')
 
-api.add_resource(ResetResource,
-                 '/reset')
+api.add_resource(NeederResource,
+                 '/needers',
+                 '/needers/<string:needer_id>')
 
 api.add_resource(BankAccountResource,
                  '/helpers/<string:helper_id>/bankaccounts',
@@ -31,6 +34,13 @@ api.add_resource(BankAccountResource,
 api.add_resource(CarResource,
                  '/helpers/<string:helper_id>/cars',
                  '/helpers/<string:helper_id>/cars/<string:car_id>')
+
+api.add_resource(PaymentMethodResource,
+                 '/needers/<string:needer_id>/paymentmethods',
+                 '/needers/<string:needer_id>/paymentmethods/<string:payment_method_id>')
+
+api.add_resource(ResetResource,
+                 '/reset')
 
 
 

@@ -20,4 +20,5 @@ class CarResource(Resource):
             abort(400)
 
     def delete(self, helper_id=None, car_id=None):
-        return jsonify(delete_car_by_car_id(car_id))
+        delete_car_by_car_id(car_id)
+        return jsonify({"message": "delete success"})

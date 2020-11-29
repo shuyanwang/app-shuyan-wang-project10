@@ -19,3 +19,7 @@ def get_all_bank_accounts_for_the_helper(helper_id):
 
 def get_bank_account_by_account_id(bank_account_id):
     return BankAccountDocument.objects.filter(id=bank_account_id).first()
+
+
+def delete_bank_account_by_account_id(bank_account_id):
+    return BankAccountDocument.objects.filter(id=bank_account_id).first().delete()

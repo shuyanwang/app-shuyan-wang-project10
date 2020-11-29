@@ -50,3 +50,6 @@ class HelperResource(Resource):
             False
         )
         return jsonify(the_created_helper)
+
+    def delete(self, helper_id=None):
+        return jsonify(delete_helper(helper_id))

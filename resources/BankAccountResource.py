@@ -18,3 +18,10 @@ class BankAccountResource(Resource):
             return jsonify(create_bank_account_in_db(helper_id, request.json))
         else:
             abort(400)
+
+    def delete(self, helper_id=None, bank_account_id=None):
+        if bank_account_id:
+            delete_bank_account_by_account_id(bank_account_id)
+            return jsonify({"message": "delete success"})
+        else:
+            abort(400)

@@ -33,7 +33,7 @@ api.add_resource(NeederResource,
 api.add_resource(RatingResource,
                  '/ratings',
                  '/ratings/<string:rating_id>',
-                 '/ratings/<string:request_id>',
+                 '/requests/<string:request_id>/ratings',
                  '/helpers/<string:helper_id>/ratings',
                  '/needers/<string:needer_id>/ratings')
 

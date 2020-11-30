@@ -8,8 +8,10 @@ def create_request_in_db(needer_id, json) -> RequestDocument:
     the_needer = get_needer_by_id(needer_id)
     if the_needer:
         json['needer_id'] = needer_id
-        json['pick_up_time'] = datetime.datetime.fromtimestamp(json['pick_up_time'] / 1e3)
-        json['drop_off_time'] = datetime.datetime.fromtimestamp(json['drop_off_time'] / 1e3)
+        if 'pick_up_time' in json:
+            json['pick_up_time'] = datetime.datetime.fromtimestamp(json['pick_up_time'] / 1e3)
+        if 'drop_off_time' in json:
+            json['drop_off_time'] = datetime.datetime.fromtimestamp(json['drop_off_time'] / 1e3)
         created_doc = RequestDocument(**json)
         created_doc.save()
         return created_doc
@@ -19,8 +21,10 @@ def create_request_in_db(needer_id, json) -> RequestDocument:
 
 def update_request(request_id: str, json):
     the_request = RequestDocument.objects.filter(id=request_id).first()
-    json['pick_up_time'] = datetime.datetime.fromtimestamp(json['pick_up_time'] / 1e3)
-    json['drop_off_time'] = datetime.datetime.fromtimestamp(json['drop_off_time'] / 1e3)
+    if 'pick_up_time' in json:
+        json['pick_up_time'] = datetime.datetime.fromtimestamp(json['pick_up_time'] / 1e3)
+    if 'drop_off_time' in json:
+        json['drop_off_time'] = datetime.datetime.fromtimestamp(json['drop_off_time'] / 1e3)
     the_request.update(**json)
     the_request.reload()
     return the_request

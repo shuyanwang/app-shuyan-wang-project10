@@ -1,22 +1,18 @@
 {
   "items": [
     {
-      "item_name": "fish",
+      "item_name": "Coffee",
       "item_type": "food",
-      "size": "big"
+      "size": "small"
     },
-    {
-      "item_name": "mac book",
-      "item_type": "electronics",
-      "size": "medium"
-    }
+
   ],
   "request_priority": "urgent",
   "pick_up_time": 1606603129447,
   "pick_up_location": [120.1, 30.003],
   "drop_off_time": 1606603139447,
   "drop_off_location": [120.34, 30.1],
-  "reward": 10.3,
+  "reward": 3,
   "note": "please be careful",
   "status": "waiting for pick up",
   "correspondence_number": "650-111-1111",

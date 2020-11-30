@@ -89,3 +89,31 @@ def delete_rating(rating_id: str):
         update_score_for_the_helper(rating_to)
     else:
         update_score_for_the_needer(rating_to)
+
+
+def reset_ratings():
+    RatingDocument.drop_collection()
+    all_requests=get_all_requests(None, None, None, None, None, None)
+    the_request_id1 = str(all_requests(status='delivered').first().id)
+    the_request_id2 = str(all_requests(status='delivered')[1].id)
+    doc1 = create_rating_in_db(
+        the_request_id1,
+        True,
+        {
+            "score": 5,
+            "comment": "The helper is very good!",
+            "from_needer_to_helper": True
+        }
+    )
+    doc2 = create_rating_in_db(
+        the_request_id2,
+        True,
+        {
+            "score": 4,
+            "comment": "The helper is good!",
+            "from_needer_to_helper": True
+        }
+    )
+    doc1.save()
+    doc2.save()
+    return RatingDocument.objects

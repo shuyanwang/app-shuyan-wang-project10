@@ -23,3 +23,14 @@ def get_car_by_car_id(car_id):
 
 def delete_car_by_car_id(car_id):
     return CarDocument.objects.filter(id=car_id).first().delete()
+
+
+def reset_cars():
+    CarDocument.drop_collection()
+    all_helpers = get_all_helpers(None, None, None, None, None, None)
+    the_helper_id = str(all_helpers.first().id)
+    doc1 = CarDocument(helper_id=the_helper_id, plate="AB12345", state="CA")
+    doc2 = CarDocument(helper_id=the_helper_id, plate="BB12345", state="NY")
+    doc1.save()
+    doc2.save()
+    return CarDocument.objects

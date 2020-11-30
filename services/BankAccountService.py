@@ -23,3 +23,26 @@ def get_bank_account_by_account_id(bank_account_id):
 
 def delete_bank_account_by_account_id(bank_account_id):
     return BankAccountDocument.objects.filter(id=bank_account_id).first().delete()
+
+
+def reset_bank_accounts():
+    BankAccountDocument.drop_collection()
+    all_helpers = get_all_helpers(None, None, None, None, None, None)
+    the_helper_id = str(all_helpers.first().id)
+    doc1 = BankAccountDocument(
+        helper_id=the_helper_id,
+        bank_name="Bank of America",
+        account_type="Saving",
+        account_number="12345",
+        routing_number="122043291"
+    )
+    doc2 = BankAccountDocument(
+        helper_id=the_helper_id,
+        bank_name="Chase",
+        account_type="Checking",
+        account_number="23455",
+        routing_number="122043294"
+    )
+    doc1.save()
+    doc2.save()
+    return BankAccountDocument.objects

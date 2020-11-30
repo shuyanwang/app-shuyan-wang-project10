@@ -1,4 +1,5 @@
 from models.SupportRequest import SupportRequestDocument
+import datetime
 
 
 def create_support_request_in_db(json):
@@ -21,7 +22,7 @@ def delete_support_request(request_id: str):
 def get_support_request_by_id(request_id):
     return SupportRequestDocument.objects.filter(id=request_id).first()
 
-# return all support requests
+
 def get_all_support_requests(filter_by, filter_value, sort_by, sort_order, page_size, page):
     objects = SupportRequestDocument.objects
 
@@ -37,3 +38,31 @@ def get_all_support_requests(filter_by, filter_value, sort_by, sort_order, page_
         objects = objects[start_index: start_index + int(page_size)]
 
     return objects
+
+
+def reset_support_requests():
+    SupportRequestDocument.drop_collection()
+    doc1 = SupportRequestDocument(
+        **({
+            "type": "IT Support",
+            "city": "Sunnyvale",
+            "contact_number": "6501111111",
+            "note": "cannot accept request",
+            "progress": [
+                {
+                    "status": "pending",
+                    "created_at": datetime.datetime.fromtimestamp(1606593299246 / 1e3)
+                },
+                {
+                    "status": "in progress",
+                    "created_at": datetime.datetime.fromtimestamp(1606593399246 / 1e3)
+                },
+                {
+                    "status": "done",
+                    "created_at": datetime.datetime.fromtimestamp(1606593499246 / 1e3)
+                }
+            ]
+        })
+    )
+    doc1.save()
+    return SupportRequestDocument.objects

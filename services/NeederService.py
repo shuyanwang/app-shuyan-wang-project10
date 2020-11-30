@@ -44,112 +44,43 @@ def get_all_needers(filter_by, filter_value, sort_by, sort_order, page_size, pag
 
     return objects
 
-# def reset_helpers():
-#     HelperDocument.drop_collection()
-#     helper_doc1 = HelperDocument(
-#         **({
-#             "first_name": "John",
-#             "last_name": "Smith",
-#             "cities": ["Mountain View", "Sunnyvale"],
-#             "available_times": [
-#                 {
-#                     "start_hour": 9,
-#                     "start_minute": 10,
-#                     "end_hour": 16,
-#                     "end_minute": 0
-#                 },
-#                 {
-#                     "start_hour": 16,
-#                     "start_minute": 10,
-#                     "end_hour": 20,
-#                     "end_minute": 0
-#                 }
-#             ],
-#             "hive_info": {
-#                 "home_latitude": 30.006,
-#                 "home_longitude": 120.123,
-#                 "office_latitude": 30.012,
-#                 "office_longitude": 119.33,
-#                 "go_to_work_hour": 8,
-#                 "go_to_work_minute": 0,
-#                 "go_home_hour": 15,
-#                 "go_home_minute": 30
-#             },
-#             "transportations": ["car", "bike"],
-#             "driver_license_number": "Y123456",
-#             "social_security_number": "42144123",
-#             "address": "100 Street 1, Sunnyvale, CA, 94183",
-#             "phone_number": "6501231234",
-#             "is_valid": True,
-#             "score": 4.95
-#         })
-#     )
-#     helper_doc2 = HelperDocument(
-#         **({
-#             "first_name": "Mary",
-#             "last_name": "Smith",
-#             "cities": ["San Francisco", "Sunnyvale"],
-#             "available_times": [
-#                 {
-#                     "start_hour": 6,
-#                     "start_minute": 10,
-#                     "end_hour": 18,
-#                     "end_minute": 0
-#                 }
-#             ],
-#             "hive_info": {
-#                 "home_latitude": 33.1,
-#                 "home_longitude": 121.3,
-#                 "office_latitude": 32.7,
-#                 "office_longitude": 123.33,
-#                 "go_to_work_hour": 6,
-#                 "go_to_work_minute": 0,
-#                 "go_home_hour": 18,
-#                 "go_home_minute": 0
-#             },
-#             "transportations": ["bike"],
-#             "driver_license_number": "Y222222",
-#             "social_security_number": "123222222",
-#             "address": "200 Street 3, Sunnyvale, CA, 94183",
-#             "phone_number": "6502222222",
-#             "is_valid": True,
-#             "score": 4.5
-#         })
-#     )
-#     helper_doc3 = HelperDocument(
-#         **({
-#             "first_name": "Selina",
-#             "last_name": "Smith",
-#             "cities": ["San Jose"],
-#             "available_times": [
-#                 {
-#                     "start_hour": 6,
-#                     "start_minute": 10,
-#                     "end_hour": 18,
-#                     "end_minute": 0
-#                 }
-#             ],
-#             "hive_info": {
-#                 "home_latitude": 33.1,
-#                 "home_longitude": 121.3,
-#                 "office_latitude": 32.7,
-#                 "office_longitude": 123.33,
-#                 "go_to_work_hour": 6,
-#                 "go_to_work_minute": 0,
-#                 "go_home_hour": 18,
-#                 "go_home_minute": 0
-#             },
-#             "transportations": ["car"],
-#             "driver_license_number": "Y3333333",
-#             "social_security_number": "123333333",
-#             "address": "300 Street 3, Sunnyvale, CA, 94183",
-#             "phone_number": "6503333333",
-#             "is_valid": True,
-#             "score": 5
-#         })
-#     )
-#     helper_doc1.save()
-#     helper_doc2.save()
-#     helper_doc3.save()
-#     return HelperDocument.objects
 
+def reset_needers():
+    NeederDocument.drop_collection()
+    doc1 = NeederDocument(
+        **({
+            "first_name": "Matt",
+            "last_name": "Smith",
+            "cities": ["San Francisco", "Sunnyvale", "Mountain View"],
+            "social_security_number": "123121234",
+            "phone_number": "4081111111",
+            "score": 4.8,
+            "is_activate": True
+        })
+    )
+    doc2 = NeederDocument(
+        **({
+            "first_name": "Jessica",
+            "last_name": "Smith",
+            "cities": ["San Jose"],
+            "social_security_number": "223232223",
+            "phone_number": "4082222222",
+            "score": 4,
+            "is_activate": True
+        })
+    )
+    doc3 = NeederDocument(
+        **({
+            "first_name": "Tim",
+            "last_name": "Smith",
+            "cities": ["Sunnyvale", "Mountain View"],
+            "social_security_number": "334343334",
+            "phone_number": "4083333333",
+            "score": 4.5,
+            "is_activate": True
+        })
+    )
+    doc1.save()
+    doc2.save()
+    doc3.save()
+    return NeederDocument.objects

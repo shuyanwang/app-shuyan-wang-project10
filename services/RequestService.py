@@ -63,11 +63,13 @@ def get_all_requests(filter_by, filter_value, sort_by, sort_order, page_size, pa
 def reset_requests():
     RequestDocument.drop_collection()
     all_needers = get_all_needers(None, None, None, None, None, None)
-    the_needer_id = str(all_needers.first().id)
+    the_needer_id1 = str(all_needers.first().id)
+    the_needer_id2 = str(all_needers[1].id)
     all_helpers = get_all_helpers(None, None, None, None, None, None)
-    the_helper_id = str(all_helpers.first().id)
+    the_helper_id1 = str(all_helpers.first().id)
+    the_helper_id2 = str(all_helpers[1].id)
     doc1 = create_request_in_db(
-        the_needer_id,
+        the_needer_id1,
         {
             "items": [
                 {
@@ -89,13 +91,13 @@ def reset_requests():
             "reward": 10.3,
             "note": "please be careful",
             "status": "delivered",
-            "helper_id": the_helper_id,
+            "helper_id": the_helper_id1,
             "correspondence_number": "650-111-1111",
             "tip": None
         }
     )
     doc2 = create_request_in_db(
-        the_needer_id,
+        the_needer_id2,
         {
             "items": [
                 {
@@ -116,14 +118,14 @@ def reset_requests():
             "drop_off_location": [110.34, 20.1],
             "reward": 12,
             "note": "please be careful",
-            "helper_id": the_helper_id,
+            "helper_id": the_helper_id1,
             "status": "delivered",
             "correspondence_number": "650-111-1111",
             "tip": None
         }
     )
     doc3 = create_request_in_db(
-        the_needer_id,
+        the_needer_id1,
         {
             "items": [
                 {
@@ -139,6 +141,29 @@ def reset_requests():
             "drop_off_location": [110.34, 40.1],
             "reward": 20,
             "note": "please be careful",
+            "status": "delivered",
+            "helper_id": the_helper_id2,
+            "correspondence_number": "650-111-1111",
+            "tip": None
+        }
+    )
+    doc4 = create_request_in_db(
+        the_needer_id1,
+        {
+            "items": [
+                {
+                    "item_name": "snacks",
+                    "item_type": "food",
+                    "size": "medium"
+                }
+            ],
+            "request_priority": "low",
+            "pick_up_time": 1606603329447,
+            "pick_up_location": [110.1, 40.003],
+            "drop_off_time": 1606604239447,
+            "drop_off_location": [110.34, 40.1],
+            "reward": 8.3,
+            "note": "please be careful",
             "status": "waiting for pick up",
             "correspondence_number": "650-111-1111",
             "tip": None
@@ -147,4 +172,5 @@ def reset_requests():
     doc1.save()
     doc2.save()
     doc3.save()
+    doc4.save()
     return RequestDocument.objects

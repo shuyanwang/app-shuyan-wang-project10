@@ -53,8 +53,21 @@ def update_score_for_the_needer(needer_id):
     the_needer.update(score=avg_score)
 
 
-def get_all_ratings():
-    return RatingDocument.objects
+def get_all_ratings(filter_by, filter_value, sort_by, sort_order, page_size, page):
+    objects = RatingDocument.objects
+
+    if filter_by and filter_value:
+        objects = objects.filter(**{filter_by: filter_value})
+
+    if sort_by:
+        order = '+' if sort_order == 'asc' else '-'
+        objects = objects.order_by(order + sort_by)
+
+    if page_size and page:
+        start_index = (int(page) - 1) * int(page_size)
+        objects = objects[start_index: start_index + int(page_size)]
+
+    return objects
 
 
 def get_ratings_for_the_helper(helper_id):

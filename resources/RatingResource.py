@@ -12,7 +12,15 @@ class RatingResource(Resource):
         elif rating_id:
             return jsonify(get_rating_by_id(rating_id))
         else:
-            return jsonify(get_all_ratings())
+            all_ratings = get_all_ratings(
+                request.args.get('filterBy'),
+                request.args.get('filterValue'),
+                request.args.get('sortBy'),
+                request.args.get('sortOrder'),
+                request.args.get('pageSize'),
+                request.args.get('page')
+            )
+            return jsonify(all_ratings)
 
     def patch(self, rating_id=None):
         if rating_id:

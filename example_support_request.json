@@ -1,0 +1,20 @@
+{
+  "type": "IT Support",
+  "city": "Sunnyvale",
+  "contact_number": "6501111111",
+  "note": "cannot accept request",
+  "progress": [
+    {
+      "status": "pending",
+      "created_at": 1606593279246
+    },
+    {
+      "status": "in progress",
+      "created_at": 1606593299246
+    },
+    {
+      "status": "done",
+      "created_at": 1606594299246
+    }
+  ]
+}

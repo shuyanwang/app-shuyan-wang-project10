@@ -8,6 +8,7 @@ from resources.NeederResource import NeederResource
 from resources.PaymentMethodResource import PaymentMethodResource
 from resources.RatingResource import RatingResource
 from resources.RequestResouce import RequestResource
+from resources.SupportRequestResource import SupportRequestResource
 from resources.ResetResource import ResetResource
 from utils.JSONEncoder import MongoEngineJSONEncoder
 
@@ -42,6 +43,10 @@ api.add_resource(RequestResource,
                  '/needers/<string:needer_id>/requests',
                  '/needers/<string:needer_id>/requests/<string:request_id>',
                  '/helpers/<string:helper_id>/requests/<string:request_id>')
+
+api.add_resource(SupportRequestResource,
+                 '/supportrequests',
+                 '/supportrequests/<string:support_request_id>')
 
 api.add_resource(BankAccountResource,
                  '/helpers/<string:helper_id>/bankaccounts',

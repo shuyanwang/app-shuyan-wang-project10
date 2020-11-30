@@ -61,7 +61,15 @@ api.add_resource(PaymentMethodResource,
                  '/needers/<string:needer_id>/paymentmethods/<string:payment_method_id>')
 
 api.add_resource(ResetResource,
-                 '/reset')
+                 '/reset',
+                 '/helpers/reset',
+                 '/needers/reset',
+                 '/bankaccounts/reset',
+                 '/cars/reset',
+                 '/paymentmethods/reset',
+                 '/requests/reset',
+                 '/ratings/reset',
+                 '/supportrequests/reset')
 
 
 @app.route('/')

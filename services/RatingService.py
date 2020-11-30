@@ -41,14 +41,14 @@ def create_rating_in_db_helper(helper_id, needer_id, request_id, from_needer_to_
 
 def update_score_for_the_helper(helper_id):
     all_ratings = RatingDocument.objects.filter(rating_to=helper_id)
-    avg_score = mean([rating['score'] for rating in all_ratings])
+    avg_score = None if len(all_ratings) == 0 else mean([rating['score'] for rating in all_ratings])
     the_helper = get_helper_by_id(helper_id)
     the_helper.update(score=avg_score)
 
 
 def update_score_for_the_needer(needer_id):
     all_ratings = RatingDocument.objects.filter(rating_to=needer_id)
-    avg_score = mean([rating['score'] for rating in all_ratings])
+    avg_score = None if len(all_ratings) == 0 else mean([rating['score'] for rating in all_ratings])
     the_needer = get_needer_by_id(needer_id)
     the_needer.update(score=avg_score)
 

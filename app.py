@@ -64,7 +64,6 @@ api.add_resource(ResetResource,
                  '/reset')
 
 
-
 @app.route('/')
 def hello_world():
     return 'Hello World!'

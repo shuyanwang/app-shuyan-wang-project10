@@ -15,9 +15,10 @@ class HelperLoginResource(Resource):
             if the_helper:
                 password_hash = get_hash_from_str(password)
                 if password_hash == the_helper['password_hash']:
+                    role = 'admin' if email == 'root@honeyandbee.com' else 'helper'
                     access_token = create_access_token(identity={
                         "email": email,
-                        "role": "helper"
+                        "role": role
                     })
                     return jsonify(id=str(the_helper.id), access_token=access_token)
                 else:

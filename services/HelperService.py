@@ -54,6 +54,19 @@ def reset_helpers():
     password_hash1 = get_hash_from_str('johnsmith')
     password_hash2 = get_hash_from_str('marysmith')
     password_hash3 = get_hash_from_str('selinasmith')
+    password_hash_root = get_hash_from_str('0825')
+    admin_doc = HelperDocument(
+        **({
+            "email": "root@honeyandbee.com",
+            "password_hash": password_hash_root,
+            "first_name": "Shuyan",
+            "last_name": "Wang",
+            "social_security_number": "1",
+            "address": "",
+            "phone_number": "6501231234",
+            "is_valid": True
+        })
+    )
     helper_doc1 = HelperDocument(
         **({
             "email": "john@yahoo.com",
@@ -162,6 +175,7 @@ def reset_helpers():
             "score": 5
         })
     )
+    admin_doc.save()
     helper_doc1.save()
     helper_doc2.save()
     helper_doc3.save()

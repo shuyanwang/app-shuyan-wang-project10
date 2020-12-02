@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_restful import Api
 from database.db import initialize_db
+from authentication.jwt import initialize_jwt
 from resources.BankAccountResource import BankAccountResource
 from resources.CarResource import CarResource
 from resources.HelperResource import HelperResource
+from resources.HelperLoginResource import HelperLoginResource
 from resources.NeederResource import NeederResource
 from resources.PaymentMethodResource import PaymentMethodResource
 from resources.RatingResource import RatingResource
@@ -18,13 +20,19 @@ app.config['MONGODB_SETTINGS'] = {
     'host': 'mongodb://localhost:27017/app-shuyanwa'
 }
 
+app.config['JWT_SECRET_KEY'] = '5fa24d85f95eb05c08d1ba9a'
+
 initialize_db(app)
+initialize_jwt(app)
 app.json_encoder = MongoEngineJSONEncoder
 api = Api(app)
 
 api.add_resource(HelperResource,
                  '/helpers',
                  '/helpers/<string:helper_id>')
+
+api.add_resource(HelperLoginResource,
+                 '/helpers/login')
 
 api.add_resource(NeederResource,
                  '/needers',

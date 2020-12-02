@@ -3,6 +3,8 @@ import datetime
 
 
 class NeederDocument(Document):
+    # email = StringField(required=True, unique=True)
+    # password_hash = StringField(required=True)
     first_name = StringField(required=True)
     last_name = StringField(required=True)
     cities = ListField(field=StringField())

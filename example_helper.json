@@ -1,4 +1,6 @@
 {
+  "email": "jack@gmail.com",
+  "password": "jacksmith",
   "first_name": "Jack",
   "last_name": "Smith",
   "cities": ["Belmont"],

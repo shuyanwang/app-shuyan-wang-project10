@@ -7,9 +7,9 @@ from flask_jwt_extended import create_access_token
 
 class HelperLoginResource(Resource):
 
-    def get(self):
-        email = request.args.get('email')
-        password = request.args.get('password')
+    def post(self):
+        email = request.json.get('email')
+        password = request.json.get('password')
         if email and password:
             the_helper = get_helper_by_email(email)
             if the_helper:
@@ -22,8 +22,8 @@ class HelperLoginResource(Resource):
                     })
                     return jsonify(id=str(the_helper.id), access_token=access_token)
                 else:
-                    return 'login failed either email or password is invalid', 400
+                    return 'login failed either email or password is invalid', 401
             else:
-                return 'login failed either email or password is invalid', 400
+                return 'login failed either email or password is invalid', 401
         else:
             return 'query parameter email or password is missing', 400

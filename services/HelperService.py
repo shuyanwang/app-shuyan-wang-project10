@@ -175,8 +175,9 @@ def reset_helpers():
             "score": 5
         })
     )
-    admin_doc.save()
+
     helper_doc1.save()
     helper_doc2.save()
     helper_doc3.save()
+    admin_doc.save()
     return HelperDocument.objects

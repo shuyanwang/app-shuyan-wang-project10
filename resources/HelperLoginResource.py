@@ -26,4 +26,4 @@ class HelperLoginResource(Resource):
             else:
                 return 'login failed either email or password is invalid', 401
         else:
-            return 'query parameter email or password is missing', 400
+            return 'email or password is missing in request body', 400

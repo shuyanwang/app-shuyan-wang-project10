@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify, request
 from services.HelperService import *
+from services.NeederService import *
 from utils.HashHelper import get_hash_from_str
 from flask_jwt_extended import (
     jwt_required,
@@ -62,8 +63,9 @@ class HelperResource(Resource):
         if json.get('email') and json.get('password'):
             email = json.get('email')
             found_helper = get_helper_by_email(email)
-            if found_helper:
-                return "Helper with this email already exists", 400
+            found_needer = get_needer_by_email(email)
+            if found_helper or found_needer:
+                return "user with this email already exists", 400
 
             password_hash = get_hash_from_str(json.get('password'))
             json['password_hash'] = password_hash

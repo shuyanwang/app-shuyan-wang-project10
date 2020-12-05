@@ -19,7 +19,7 @@ class HelperResource(Resource):
     """
     @jwt_required
     def get(self, helper_id=None):
-        jwt_identity = get_jwt_identity()  # { "email": "1231@af.com, "role": "helper"}
+        jwt_identity = get_jwt_identity()
         if helper_id:
             the_helper = get_helper_by_id(helper_id)
             if the_helper:
@@ -28,7 +28,7 @@ class HelperResource(Resource):
                 else:
                     return "you are not authorized", 403
             else:
-                return "helper does not exist", 404
+                return "helper not found", 404
         else:
             if jwt_identity['role'] == 'admin':
                 all_helpers = get_all_helpers(
@@ -53,7 +53,7 @@ class HelperResource(Resource):
                     return jsonify(update_helper(helper_id, request.json))
                 else:
                     return "you are not authorized", 403
-            return "helper does not exist", 404
+            return "helper not found", 404
         else:
             return 'helper_id is needed for updating a helper'
 
@@ -87,6 +87,6 @@ class HelperResource(Resource):
                     return jsonify(delete_helper(helper_id))
                 else:
                     return "you are not authorized", 403
-            return "helper does not exist", 404
+            return "needer not found", 404
         else:
             return 'helper_id is needed for deleting a helper'

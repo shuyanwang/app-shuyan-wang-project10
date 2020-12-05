@@ -7,6 +7,7 @@ from resources.CarResource import CarResource
 from resources.HelperResource import HelperResource
 from resources.HelperLoginResource import HelperLoginResource
 from resources.NeederResource import NeederResource
+from resources.NeederLoginResource import NeederLoginResource
 from resources.PaymentMethodResource import PaymentMethodResource
 from resources.RatingResource import RatingResource
 from resources.RequestResouce import RequestResource
@@ -38,6 +39,9 @@ api.add_resource(HelperLoginResource,
 api.add_resource(NeederResource,
                  '/needers',
                  '/needers/<string:needer_id>')
+
+api.add_resource(NeederLoginResource,
+                 '/needers/login')
 
 api.add_resource(RatingResource,
                  '/ratings',

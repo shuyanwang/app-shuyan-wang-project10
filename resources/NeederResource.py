@@ -17,23 +17,44 @@ class NeederResource(Resource):
     query param: filterBy, filterValue (e.g. filterBy=cities, filterValue=San Francisco)
     query param: pageSize, page (pageSize: num docs in the same page, page, which page, starting from 1)
     """
+    @jwt_required
     def get(self, needer_id=None):
+        jwt_identity = get_jwt_identity()
         if needer_id:
-            return jsonify(get_needer_by_id(needer_id))
+            the_needer = get_needer_by_id(needer_id)
+            if the_needer:
+                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                    return jsonify(the_needer)
+                else:
+                    return "you are not authorized", 403
+            else:
+                return 'needer not found', 404
         else:
-            all_needers = get_all_needers(
-                request.args.get('filterBy'),
-                request.args.get('filterValue'),
-                request.args.get('sortBy'),
-                request.args.get('sortOrder'),
-                request.args.get('pageSize'),
-                request.args.get('page')
-            )
-            return jsonify(all_needers)
+            if jwt_identity['role'] == 'admin':
+                all_needers = get_all_needers(
+                    request.args.get('filterBy'),
+                    request.args.get('filterValue'),
+                    request.args.get('sortBy'),
+                    request.args.get('sortOrder'),
+                    request.args.get('pageSize'),
+                    request.args.get('page')
+                )
+                return jsonify(all_needers)
+            else:
+                return "only admin can access all users data", 403
 
+    @jwt_required
     def patch(self, needer_id=None):
+        jwt_identity = get_jwt_identity()
         if needer_id:
-            return jsonify(update_needer(needer_id, request.json))
+            the_needer = get_needer_by_id(needer_id)
+            if the_needer:
+                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                    return jsonify(update_needer(needer_id, request.json))
+                else:
+                    return "you are not authorized", 403
+            else:
+                return "needer not found", 404
         else:
             return 'needer_id is needed for updating a needer'
 
@@ -57,5 +78,16 @@ class NeederResource(Resource):
         else:
             return "email or password is missing in request body", 400
 
+    @jwt_required
     def delete(self, needer_id=None):
-        return jsonify(delete_needer(needer_id))
+        if needer_id:
+            jwt_identity = get_jwt_identity()
+            the_needer = get_needer_by_id(needer_id)
+            if the_needer:
+                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                    return jsonify(delete_needer(needer_id))
+                else:
+                    return "you are not authorized", 403
+            return "needer not found", 404
+        else:
+            return 'needer_id is needed for deleting a helper'

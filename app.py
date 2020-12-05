@@ -21,6 +21,7 @@ app.config['MONGODB_SETTINGS'] = {
 }
 
 app.config['JWT_SECRET_KEY'] = '5fa24d85f95eb05c08d1ba9a'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 
 initialize_db(app)
 initialize_jwt(app)

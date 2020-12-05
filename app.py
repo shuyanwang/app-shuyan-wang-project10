@@ -55,6 +55,7 @@ api.add_resource(RequestResource,
                  '/requests/<string:request_id>',
                  '/needers/<string:needer_id>/requests',
                  '/needers/<string:needer_id>/requests/<string:request_id>',
+                 '/helpers/<string:helper_id>/requests',
                  '/helpers/<string:helper_id>/requests/<string:request_id>')
 
 api.add_resource(SupportRequestResource,

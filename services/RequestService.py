@@ -43,6 +43,10 @@ def get_all_requests_for_the_needer(needer_id):
     return RequestDocument.objects.filter(needer_id=needer_id)
 
 
+def get_all_requests_for_the_helper(helper_id):
+    return RequestDocument.objects.filter(helper_id=helper_id)
+
+
 def get_all_requests(filter_by, filter_value, sort_by, sort_order, page_size, page):
     objects = RequestDocument.objects
 

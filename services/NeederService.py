@@ -1,5 +1,5 @@
 from models.Needer import NeederDocument
-import datetime
+from utils.HashHelper import get_hash_from_str
 
 
 def create_needer_in_db(json) -> NeederDocument:
@@ -27,6 +27,10 @@ def get_needer_by_id(needer_id):
     return NeederDocument.objects.filter(id=needer_id).filter(is_activate=True).first()
 
 
+def get_needer_by_email(email):
+    return NeederDocument.objects.filter(email=email).first()
+
+
 # return all active needers
 def get_all_needers(filter_by, filter_value, sort_by, sort_order, page_size, page):
     objects = NeederDocument.objects.filter(is_activate=True)
@@ -47,8 +51,13 @@ def get_all_needers(filter_by, filter_value, sort_by, sort_order, page_size, pag
 
 def reset_needers():
     NeederDocument.drop_collection()
+    password_hash1 = get_hash_from_str("mattsmith")
+    password_hash2 = get_hash_from_str("jessicasmith")
+    password_hash3 = get_hash_from_str("timsmith")
     doc1 = NeederDocument(
         **({
+            "email": "matt@gmail.com",
+            "password_hash": password_hash1,
             "first_name": "Matt",
             "last_name": "Smith",
             "cities": ["San Francisco", "Sunnyvale", "Mountain View"],
@@ -60,6 +69,8 @@ def reset_needers():
     )
     doc2 = NeederDocument(
         **({
+            "email": "jessica@gmail.com",
+            "password_hash": password_hash2,
             "first_name": "Jessica",
             "last_name": "Smith",
             "cities": ["San Jose"],
@@ -71,6 +82,8 @@ def reset_needers():
     )
     doc3 = NeederDocument(
         **({
+            "email": "tim@gmail.com",
+            "password_hash": password_hash3,
             "first_name": "Tim",
             "last_name": "Smith",
             "cities": ["Sunnyvale", "Mountain View"],

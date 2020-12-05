@@ -1,6 +1,12 @@
 from flask_restful import Resource
 from flask import jsonify, request
 from services.NeederService import *
+from utils.HashHelper import *
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity,
+    create_access_token
+)
 
 
 class NeederResource(Resource):
@@ -32,8 +38,24 @@ class NeederResource(Resource):
             return 'needer_id is needed for updating a needer'
 
     def post(self):
-        the_created_needer = create_needer_in_db(request.json)
-        return jsonify(the_created_needer)
+        json = request.json
+        if json.get('email') and json.get('password'):
+            email = json.get('email')
+            found_needer = get_needer_by_email(email)
+            if found_needer:
+                return "needer with this email already exists", 400
+
+            password_hash = get_hash_from_str(json.get('password'))
+            json['password_hash'] = password_hash
+            del json['password']
+            the_created_needer = create_needer_in_db(json)
+            access_token = create_access_token(identity={
+                "email": email,
+                "role": "needer"
+            })
+            return jsonify(id=str(the_created_needer.id), access_token=access_token)
+        else:
+            return "email or password is missing in request body", 400
 
     def delete(self, needer_id=None):
         return jsonify(delete_needer(needer_id))

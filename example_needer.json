@@ -1,8 +1,10 @@
 {
-  "first_name": "Matt",
+  "email": "eric@gmail.com",
+  "password": "ericsmith",
+  "first_name": "Eric",
   "last_name": "Smith",
   "cities": ["San Francisco", "Sunnyvale", "Mountain View"],
-  "social_security_number": "123121234",
+  "social_security_number": "111111111",
   "phone_number": "4081111111",
   "score": 4.8,
   "is_activate": true

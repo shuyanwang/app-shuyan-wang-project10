@@ -9,7 +9,6 @@ from flask_jwt_extended import (
 
 
 class CarResource(Resource):
-
     @jwt_required
     def get(self, helper_id=None, car_id=None):
         jwt_identity = get_jwt_identity()
@@ -18,8 +17,8 @@ class CarResource(Resource):
             if car_id:
                 the_car = get_car_by_car_id(car_id)
                 if the_car:
-                    if helper_id == get_car_by_car_id(car_id).helper_id:
-                        return jsonify(get_car_by_car_id(car_id))
+                    if helper_id == the_car.helper_id or jwt_identity['role'] == 'admin':
+                        return jsonify(the_car)
                     else:
                         return "you are not authorized", 403
                 else:
@@ -27,7 +26,7 @@ class CarResource(Resource):
             elif helper_id:
                 return jsonify(get_all_cars_for_the_helper(helper_id))
             else:
-                return "bad request", 400
+                return "car id or helper id is missing", 400
         else:
             return "you are not authorized", 403
 

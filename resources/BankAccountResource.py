@@ -1,27 +1,57 @@
 from flask_restful import Resource
 from flask import jsonify, request, abort
 from services.BankAccountService import *
+from services.HelperService import *
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity
+)
 
 
 class BankAccountResource(Resource):
-
+    @jwt_required
     def get(self, helper_id=None, bank_account_id=None):
-        if bank_account_id:
-            return jsonify(get_bank_account_by_account_id(bank_account_id))
-        elif helper_id:
-            return jsonify(get_all_bank_accounts_for_the_helper(helper_id))
+        jwt_identity = get_jwt_identity()
+        the_helper = get_helper_by_id(helper_id)
+        if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+            if bank_account_id:
+                the_account = get_bank_account_by_account_id(bank_account_id)
+                if the_account:
+                    if helper_id == the_account.helper_id or jwt_identity['role'] == 'admin':
+                        return jsonify(the_account)
+                    else:
+                        return "you are not authorized", 403
+                else:
+                    return "bank account not found", 404
+            elif helper_id:
+                return jsonify(get_all_bank_accounts_for_the_helper(helper_id))
+            else:
+                return "bank account id or helper id is missing", 400
         else:
-            abort(400)
+            return "you are not authorized", 403
 
+    @jwt_required
     def post(self, helper_id=None):
         if helper_id:
-            return jsonify(create_bank_account_in_db(helper_id, request.json))
+            jwt_identity = get_jwt_identity()
+            the_helper = get_helper_by_id(helper_id)
+            if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+                return jsonify(create_bank_account_in_db(helper_id, request.json))
+            else:
+                return "you are not authorized", 403
         else:
             abort(400)
 
+    @jwt_required
     def delete(self, helper_id=None, bank_account_id=None):
-        if bank_account_id:
-            delete_bank_account_by_account_id(bank_account_id)
-            return jsonify({"message": "delete success"})
+        jwt_identity = get_jwt_identity()
+        the_account = get_bank_account_by_account_id(bank_account_id)
+        if the_account:
+            the_helper = get_helper_by_id(the_account.helper_id)
+            if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+                delete_bank_account_by_account_id(bank_account_id)
+                return jsonify({"message": "delete success"})
+            else:
+                return 'you are not authorized', 403
         else:
-            abort(400)
+            return 'bank account not found', 404

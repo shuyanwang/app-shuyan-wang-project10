@@ -70,11 +70,11 @@ def get_all_ratings(filter_by, filter_value, sort_by, sort_order, page_size, pag
     return objects
 
 
-def get_ratings_for_the_helper(helper_id):
+def get_ratings_to_the_helper(helper_id):
     return RatingDocument.objects(rating_to=helper_id)
 
 
-def get_ratings_for_the_needer(needer_id):
+def get_ratings_to_the_needer(needer_id):
     return RatingDocument.objects(rating_to=needer_id)
 
 

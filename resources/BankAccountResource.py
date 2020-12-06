@@ -1,5 +1,6 @@
 from flask_restful import Resource
 from flask import jsonify, request, abort
+from utils.AuthenticationUtils import *
 from services.BankAccountService import *
 from services.HelperService import *
 from flask_jwt_extended import (
@@ -13,11 +14,11 @@ class BankAccountResource(Resource):
     def get(self, helper_id=None, bank_account_id=None):
         jwt_identity = get_jwt_identity()
         the_helper = get_helper_by_id(helper_id)
-        if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+        if user_has_permission(jwt_identity, the_helper):
             if bank_account_id:
                 the_account = get_bank_account_by_account_id(bank_account_id)
                 if the_account:
-                    if helper_id == the_account.helper_id or jwt_identity['role'] == 'admin':
+                    if helper_id == the_account.helper_id or user_is_admin(jwt_identity):
                         return jsonify(the_account)
                     else:
                         return "you are not authorized", 403
@@ -35,7 +36,7 @@ class BankAccountResource(Resource):
         if helper_id:
             jwt_identity = get_jwt_identity()
             the_helper = get_helper_by_id(helper_id)
-            if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_helper):
                 return jsonify(create_bank_account_in_db(helper_id, request.json))
             else:
                 return "you are not authorized", 403
@@ -48,7 +49,7 @@ class BankAccountResource(Resource):
         the_account = get_bank_account_by_account_id(bank_account_id)
         if the_account:
             the_helper = get_helper_by_id(the_account.helper_id)
-            if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_helper):
                 delete_bank_account_by_account_id(bank_account_id)
                 return jsonify({"message": "delete success"})
             else:

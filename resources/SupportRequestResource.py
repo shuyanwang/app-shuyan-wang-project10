@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify, request
 from services.SupportRequestService import *
+from utils.AuthenticationUtils import *
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity
@@ -17,7 +18,7 @@ class SupportRequestResource(Resource):
     @jwt_required
     def get(self, support_request_id=None):
         jwt_identity = get_jwt_identity()
-        if jwt_identity['role'] == 'admin':
+        if user_is_admin(jwt_identity):
             if support_request_id:
                 return jsonify((get_support_request_by_id(support_request_id)))
             else:
@@ -37,7 +38,7 @@ class SupportRequestResource(Resource):
     def patch(self, support_request_id=None):
         if support_request_id:
             jwt_identity = get_jwt_identity()
-            if jwt_identity['role'] == 'admin':
+            if user_is_admin(jwt_identity):
                 the_support_request = get_support_request_by_id(support_request_id)
                 if the_support_request:
                     return jsonify(update_support_request(support_request_id, request.json))
@@ -56,7 +57,7 @@ class SupportRequestResource(Resource):
     @jwt_required
     def delete(self, support_request_id=None):
         jwt_identity = get_jwt_identity()
-        if jwt_identity['role'] == 'admin':
+        if user_is_admin(jwt_identity):
             the_support_request = get_support_request_by_id(support_request_id)
             if the_support_request:
                 delete_support_request(support_request_id)

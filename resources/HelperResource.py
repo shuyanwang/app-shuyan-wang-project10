@@ -1,8 +1,9 @@
 from flask_restful import Resource
 from flask import jsonify, request
+from utils.AuthenticationUtils import *
 from services.HelperService import *
 from services.NeederService import *
-from utils.HashHelper import get_hash_from_str
+from utils.HashUtils import get_hash_from_str
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity,
@@ -24,14 +25,14 @@ class HelperResource(Resource):
         if helper_id:
             the_helper = get_helper_by_id(helper_id)
             if the_helper:
-                if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_helper):
                     return jsonify(the_helper)
                 else:
                     return "you are not authorized", 403
             else:
                 return "helper not found", 404
         else:
-            if jwt_identity['role'] == 'admin':
+            if user_is_admin(jwt_identity):
                 all_helpers = get_all_helpers(
                     request.args.get('filterBy'),
                     request.args.get('filterValue'),
@@ -50,7 +51,7 @@ class HelperResource(Resource):
             jwt_identity = get_jwt_identity()
             the_helper = get_helper_by_id(helper_id)
             if the_helper:
-                if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_helper):
                     return jsonify(update_helper(helper_id, request.json))
                 else:
                     return "you are not authorized", 403
@@ -85,7 +86,7 @@ class HelperResource(Resource):
             jwt_identity = get_jwt_identity()
             the_helper = get_helper_by_id(helper_id)
             if the_helper:
-                if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_helper):
                     return jsonify(delete_helper(helper_id))
                 else:
                     return "you are not authorized", 403

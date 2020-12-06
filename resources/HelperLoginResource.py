@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify, request
 from services.HelperService import *
-from utils.HashHelper import get_hash_from_str
+from utils.HashUtils import get_hash_from_str
 from flask_jwt_extended import create_access_token
 
 

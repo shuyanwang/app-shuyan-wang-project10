@@ -1,5 +1,5 @@
 from models.Helper import HelperDocument, AvailableTimeDocument, HiveInfoDocument
-from utils.HashHelper import get_hash_from_str
+from utils.HashUtils import get_hash_from_str
 
 
 def create_helper_in_db(json) -> HelperDocument:

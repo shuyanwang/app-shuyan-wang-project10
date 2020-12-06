@@ -2,7 +2,8 @@ from flask_restful import Resource
 from flask import jsonify, request
 from services.NeederService import *
 from services.HelperService import *
-from utils.HashHelper import *
+from utils.HashUtils import *
+from utils.AuthenticationUtils import *
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity,
@@ -24,14 +25,14 @@ class NeederResource(Resource):
         if needer_id:
             the_needer = get_needer_by_id(needer_id)
             if the_needer:
-                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_needer):
                     return jsonify(the_needer)
                 else:
                     return "you are not authorized", 403
             else:
                 return 'needer not found', 404
         else:
-            if jwt_identity['role'] == 'admin':
+            if user_is_admin(jwt_identity):
                 all_needers = get_all_needers(
                     request.args.get('filterBy'),
                     request.args.get('filterValue'),
@@ -50,7 +51,7 @@ class NeederResource(Resource):
         if needer_id:
             the_needer = get_needer_by_id(needer_id)
             if the_needer:
-                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_needer):
                     return jsonify(update_needer(needer_id, request.json))
                 else:
                     return "you are not authorized", 403
@@ -86,10 +87,10 @@ class NeederResource(Resource):
             jwt_identity = get_jwt_identity()
             the_needer = get_needer_by_id(needer_id)
             if the_needer:
-                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_needer):
                     return jsonify(delete_needer(needer_id))
                 else:
                     return "you are not authorized", 403
             return "needer not found", 404
         else:
-            return 'needer_id is needed for deleting a helper'
+            return 'needer_id is needed for deleting a helper', 400

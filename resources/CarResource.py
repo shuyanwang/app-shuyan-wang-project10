@@ -1,5 +1,6 @@
 from flask_restful import Resource
 from flask import jsonify, request
+from utils.AuthenticationUtils import *
 from services.CarService import *
 from services.HelperService import *
 from flask_jwt_extended import (
@@ -13,7 +14,7 @@ class CarResource(Resource):
     def get(self, helper_id=None, car_id=None):
         jwt_identity = get_jwt_identity()
         the_helper = get_helper_by_id(helper_id)
-        if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+        if user_has_permission(jwt_identity, the_helper):
             if car_id:
                 the_car = get_car_by_car_id(car_id)
                 if the_car:
@@ -35,7 +36,7 @@ class CarResource(Resource):
         if helper_id:
             jwt_identity = get_jwt_identity()
             the_helper = get_helper_by_id(helper_id)
-            if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_helper):
                 return jsonify(create_car_in_db(helper_id, request.json))
             else:
                 return "you are not authorized", 403
@@ -48,7 +49,7 @@ class CarResource(Resource):
         the_car = get_car_by_car_id(car_id)
         if the_car:
             the_helper = get_helper_by_id(the_car.helper_id)
-            if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_helper):
                 delete_car_by_car_id(car_id)
                 return jsonify({"message": "delete success"})
             else:

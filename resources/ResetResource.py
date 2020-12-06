@@ -6,6 +6,7 @@ from services.CarService import *
 from services.BankAccountService import *
 from services.PaymentMethodService import *
 from services.RequestService import *
+from utils.AuthenticationUtils import *
 from services.RatingService import *
 from services.SupportRequestService import *
 from flask_jwt_extended import (
@@ -18,7 +19,7 @@ class ResetResource(Resource):
     @jwt_required
     def get(self):
         jwt_identity = get_jwt_identity()
-        if jwt_identity['role'] == 'admin':
+        if user_is_admin(jwt_identity):
             reset_helpers()
             reset_needers()
             reset_cars()

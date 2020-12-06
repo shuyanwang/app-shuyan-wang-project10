@@ -3,6 +3,7 @@ from flask import jsonify, request, abort
 from services.RequestService import *
 from services.HelperService import *
 from services.NeederService import *
+from utils.AuthenticationUtils import *
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity
@@ -23,7 +24,7 @@ class RequestResource(Resource):
         if request_id:
             the_request = get_request_by_id(request_id)
             the_needer = get_needer_by_id(the_request.needer_id)
-            if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_needer):
                 return jsonify(the_request)
             elif the_request.helper_id:
                 the_helper = get_helper_by_id(the_request.helper_id)
@@ -36,7 +37,7 @@ class RequestResource(Resource):
         elif needer_id:
             the_needer = get_needer_by_id(needer_id)
             if the_needer:
-                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_needer):
                     return jsonify(get_all_requests_for_the_needer(needer_id))
                 else:
                     return 'you are not authorized', 403
@@ -45,14 +46,14 @@ class RequestResource(Resource):
         elif helper_id:
             the_helper = get_helper_by_id(helper_id)
             if the_helper:
-                if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_helper):
                     return jsonify(get_all_requests_for_the_helper(helper_id))
                 else:
                     return 'you are not authorized', 403
             else:
                 return 'helpers not found', 404
         else:
-            if jwt_identity['role'] == 'admin':
+            if user_is_admin(jwt_identity):
                 all_requests = get_all_requests(
                     request.args.get('filterBy'),
                     request.args.get('filterValue'),
@@ -75,7 +76,7 @@ class RequestResource(Resource):
                     # helper can only change helper_id and status for a request
                     the_helper = get_helper_by_id(helper_id)
                     if the_helper:
-                        if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin' and\
+                        if user_has_permission(jwt_identity, the_helper) and\
                                 (not the_request.helper_id or str(the_request.helper_id) == helper_id):
                             json = {"helper_id": helper_id, "status": request.json['status']}
                             return jsonify(update_request(request_id, json))
@@ -85,7 +86,7 @@ class RequestResource(Resource):
                         return 'helper not found', 404
                 else:
                     the_needer = get_needer_by_id(the_request.needer_id)
-                    if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                    if user_has_permission(jwt_identity, the_needer):
                         return jsonify(update_request(request_id, request.json))
                     else:
                         return 'you are not authorized', 403
@@ -100,7 +101,7 @@ class RequestResource(Resource):
             jwt_identity = get_jwt_identity()
             the_needer = get_needer_by_id(needer_id)
             if the_needer:
-                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_needer):
                     the_created_request = create_request_in_db(needer_id, request.json)
                     return jsonify(the_created_request)
                 return 'you are not authorized', 403
@@ -115,7 +116,7 @@ class RequestResource(Resource):
         if the_request:
             jwt_identity = get_jwt_identity()
             the_needer = get_needer_by_id(the_request.needer_id)
-            if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_needer):
                 delete_request(request_id)
                 return jsonify({"message": "delete success"})
             else:

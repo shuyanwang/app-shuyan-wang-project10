@@ -1,5 +1,5 @@
 from models.Needer import NeederDocument
-from utils.HashHelper import get_hash_from_str
+from utils.HashUtils import get_hash_from_str
 
 
 def create_needer_in_db(json) -> NeederDocument:

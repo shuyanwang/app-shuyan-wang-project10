@@ -3,6 +3,7 @@ from flask import jsonify, request, abort
 from services.RatingService import *
 from services.HelperService import *
 from services.NeederService import *
+from utils.AuthenticationUtils import *
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity
@@ -16,7 +17,7 @@ class RatingResource(Resource):
         if needer_id:
             the_needer = get_needer_by_id(needer_id)
             if the_needer:
-                if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_needer):
                     return jsonify(get_ratings_to_the_needer(needer_id))
                 else:
                     return "you are not authorized", 403
@@ -25,7 +26,7 @@ class RatingResource(Resource):
         elif helper_id:
             the_helper = get_helper_by_id(helper_id)
             if the_helper:
-                if jwt_identity['email'] == str(the_helper.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_helper):
                     return jsonify(get_ratings_to_the_helper(helper_id))
                 else:
                     return "you are not authorized", 403
@@ -43,15 +44,14 @@ class RatingResource(Resource):
                 else:
                     the_needer = get_needer_by_id(the_rating.rating_to)
                     the_helper = get_helper_by_id(the_rating.rating_from)
-                if jwt_identity['role'] == 'admin' or jwt_identity['email'] == str(the_helper.email) \
-                        or jwt_identity['email'] == str(the_needer.email):
+                if user_has_permission(jwt_identity, the_helper) or user_has_permission(jwt_identity, the_needer):
                     return jsonify(the_rating)
                 else:
                     return 'you are not authorized', 403
             else:
                 return 'rating not found', 404
         else:
-            if jwt_identity['role'] == 'admin':
+            if user_is_admin(jwt_identity):
                 all_ratings = get_all_ratings(
                     request.args.get('filterBy'),
                     request.args.get('filterValue'),
@@ -72,7 +72,7 @@ class RatingResource(Resource):
             if the_rating:
                 the_rating_from_user = get_needer_by_id(the_rating.rating_from) \
                     if the_rating.from_needer_to_helper else get_helper_by_id(the_rating.rating_from)
-                if jwt_identity['email'] == str(the_rating_from_user.email) or jwt_identity['role'] == 'admin':
+                if user_has_permission(jwt_identity, the_rating_from_user):
                     return jsonify(update_rating(rating_id, request.json))
                 else:
                     return 'you are not authorized', 403
@@ -91,7 +91,7 @@ class RatingResource(Resource):
                     if 'from_needer_to_helper' in request.json:
                         the_rating_from_user = get_needer_by_id(the_request.needer_id) \
                             if request.json.get('from_needer_to_helper') else get_helper_by_id(the_request.helper_id)
-                        if jwt_identity['email'] == str(the_rating_from_user.email) or jwt_identity['role'] == 'admin':
+                        if user_has_permission(jwt_identity, the_rating_from_user):
                             the_created_rating = create_rating_in_db(request_id, request.json['from_needer_to_helper'], request.json)
                             return jsonify(the_created_rating)
                         else:
@@ -112,7 +112,7 @@ class RatingResource(Resource):
             jwt_identity = get_jwt_identity()
             the_rating_from_user = get_needer_by_id(the_rating.rating_from) \
                 if the_rating.from_needer_to_helper else get_helper_by_id(the_rating.rating_from)
-            if jwt_identity['email'] == str(the_rating_from_user.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_rating_from_user):
                 delete_rating(rating_id)
                 return jsonify({"message": "delete success"})
             else:

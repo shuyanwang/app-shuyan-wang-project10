@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from flask import jsonify, request
 from services.PaymentMethodService import *
+from utils.AuthenticationUtils import *
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity
@@ -13,11 +14,11 @@ class PaymentMethodResource(Resource):
     def get(self, needer_id=None, payment_method_id=None):
         jwt_identity = get_jwt_identity()
         the_needer = get_needer_by_id(needer_id)
-        if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+        if user_has_permission(jwt_identity, the_needer):
             if payment_method_id:
                 the_method = get_payment_method_by_payment_method_id(payment_method_id)
                 if the_method:
-                    if needer_id == the_method.needer_id or jwt_identity['role'] == 'admin':
+                    if needer_id == the_method.needer_id or user_is_admin(jwt_identity):
                         return jsonify(the_method)
                     else:
                         return "you are not authorized", 403
@@ -35,7 +36,7 @@ class PaymentMethodResource(Resource):
         if needer_id:
             jwt_identity = get_jwt_identity()
             the_needer = get_needer_by_id(needer_id)
-            if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_needer):
                 return jsonify(create_payment_method_in_db(needer_id, request.json))
             else:
                 return "you are not authorized", 403
@@ -48,7 +49,7 @@ class PaymentMethodResource(Resource):
         the_method = get_payment_method_by_payment_method_id(payment_method_id)
         if the_method:
             the_needer = get_needer_by_id(the_method.needer_id)
-            if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_needer):
                 return jsonify(update_payment_method_by_payment_method_id(payment_method_id, request.json))
             else:
                 return "you are not authorized", 403
@@ -61,7 +62,7 @@ class PaymentMethodResource(Resource):
         the_method = get_payment_method_by_payment_method_id(payment_method_id)
         if the_method:
             the_needer = get_needer_by_id(the_method.needer_id)
-            if jwt_identity['email'] == str(the_needer.email) or jwt_identity['role'] == 'admin':
+            if user_has_permission(jwt_identity, the_needer):
                 delete_payment_method_by_payment_method_id(payment_method_id)
                 return jsonify({"message": "delete success"})
             else:

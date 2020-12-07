@@ -10,6 +10,9 @@ def create_support_request_in_db(json):
 
 def update_support_request(request_id: str, json):
     the_request = SupportRequestDocument.objects.filter(id=request_id).first()
+    if 'type' in json:
+        json['type__'] = json['type']
+        del json['type']
     the_request.update(**json)
     the_request.reload()
     return the_request

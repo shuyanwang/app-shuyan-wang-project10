@@ -90,6 +90,6 @@ class HelperResource(Resource):
                     return jsonify(delete_helper(helper_id))
                 else:
                     return "you are not authorized", 403
-            return "needer not found", 404
+            return "Helper not found", 404
         else:
             return 'helper_id is needed for deleting a helper'

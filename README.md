@@ -18,3 +18,17 @@ Honey and Bee is an application that helps users to get their stuffs picked up. 
 
 
 
+Test report
+https://docs.google.com/document/d/1_z-gezVF8IkMVSsviyXuhF27spfMoKiq2rU-R7GKkFs/edit?usp=sharing
+
+Important notes:
+1.Users can only access their own data except for admin.
+2.Admin is treated as a special helper.
+3. Token will not expire for testing purposes.
+4. It’s recommended to reset if your data gets messy.
+5.As every API is protected now, you have to login as admin("email": "root@honeyandbee.com", "password": "0825") to reset. 
+6. It’s recommended to test as admin unless you are testing relative features deliberately.
+7.All id will change when you reset the database
+8.admin account: 
+ "email": "root@honeyandbee.com",
+ "password": "0825"
